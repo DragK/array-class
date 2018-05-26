@@ -1,0 +1,9 @@
+{
+    "name": "dragk/array-class",
+    "description": "PHP version a array based on JavaScript",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "type": "library",
+    "version": "1.0.0",
+    "require": {}
+}

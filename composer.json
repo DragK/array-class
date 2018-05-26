@@ -5,5 +5,17 @@
     "minimum-stability": "dev",
     "type": "library",
     "version": "1.0.0",
-    "require": {}
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^5"
+    },
+    "autoload": {
+        "psr-4": {
+            "DragK\\": "src/"
+        },
+        "classmap": [
+            "src/",
+            "test/"
+        ]
+    }
 }

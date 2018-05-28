@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use \PHPUnit\Framework\TestCase;
@@ -105,5 +106,81 @@ final class ArrayTest extends TestCase
 
         // test changing a length of array
         $this->assertEquals(2, $arr->length);
+    }
+
+    public function testFilter()
+    {
+        // int test
+        $arr = new ArrayClass([1, 2, 3, 4, 5]);
+        $result = $arr->filter(function ($value) {
+            return $value >= 3;
+        });
+
+        $this->assertEquals([3, 4, 5], $result->getArray());
+
+        // string test
+        $arr = new ArrayClass(['spray', 'limit', 'elite', 'exuberant', 'destruction', 'present']);
+        $result = $arr->filter(function ($value) {
+            return strlen($value) >= 6;
+        });
+
+        $this->assertEquals(["exuberant", "destruction", "present"], $result->getArray());
+
+        // test with key array
+        $arr = new ArrayClass([
+            'a' => 'spray',
+            'b' => 'limit',
+            'c' => 'elite',
+            'd' => 'exuberant',
+            'e' => 'destruction',
+            'f' => 'present'
+        ]);
+
+        $result = $arr->filter(function ($value, $key) {
+            return strlen($value) >= 6 && $key < 'e';
+        });
+
+        $this->assertEquals(['d' => "exuberant",], $result->getArray());
+    }
+
+    public function testFill()
+    {
+        $arr = new ArrayClass([1, 2, 3, 4, 5]);
+
+        // one parameter
+        $result = $arr->fill(7);
+        $this->assertEquals([7, 7, 7, 7, 7], $result->getArray());
+
+        // two parameters: startIndex
+        $result = $result->fill(6, 2);
+        $this->assertEquals([7, 7, 6, 6, 6], $result->getArray());
+
+        // three parameters
+        $result = $result->fill(10, 2, 4);
+        $this->assertEquals([7, 7, 10, 10, 6], $result->getArray());
+
+        // two parameters: endIndex
+
+        $result = $result->fill(12, null, 1);
+        $this->assertEquals([12, 7, 10, 10, 6], $result->getArray());
+    }
+
+    public function testReduce()
+    {
+        $arr = new ArrayClass([1, 2, 3, 4, 5]);
+
+        // sum
+        $result = $arr->reduce(function ($result, $value) {
+            return $value + $result;
+        }, 0);
+
+        $this->assertEquals(15, $result);
+
+        // multiply
+        $result = $arr->reduce(function ($result, $value) {
+            return $value * $result;
+        }, 1);
+
+        $this->assertEquals(120, $result);
     }
 }

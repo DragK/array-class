@@ -67,12 +67,18 @@ class ArrayClass extends \ArrayIterator implements ArrayInterface
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function append($value)
     {
         parent::append($value);
         $this->setLength();
     }
 
+    /**
+     * @inheritdoc
+     */
     public function push(...$data) : int
     {
         foreach($data as $value) {
@@ -82,6 +88,9 @@ class ArrayClass extends \ArrayIterator implements ArrayInterface
         return $this->length;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function pop()
     {
         $value = $this[$this->length - 1];
@@ -94,5 +103,54 @@ class ArrayClass extends \ArrayIterator implements ArrayInterface
     private function setLength()
     {
         $this->length = $this->count();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function filter(callable $func): ArrayClass
+    {
+        $newArr = [];
+
+        foreach ($this as $key => $value) {
+            if (!$func($value, $key)) {
+                continue;
+            }
+
+            if (is_string($key)) {
+                $newArr[$key] = $value;
+            } else {
+                $newArr[] = $value;
+            }
+        }
+
+        return new ArrayClass($newArr);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function fill($value, $startIndex = null, $endIndex = null): ArrayClass
+    {
+        $newArr = $this->getArray();
+
+        for ($i = (is_null($startIndex) ? 0 : $startIndex); $i < (is_null($endIndex) ? $this->length : $endIndex); $i++) {
+            $newArr[$i] = $value;
+        }
+
+        return new ArrayClass($newArr);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function reduce(callable $func, $initValue = 0)
+    {
+        $result = $initValue;
+        foreach ($this as $key => $value) {
+            $result = $func($result, $value, $key);
+        }
+
+        return $result;
     }
 }

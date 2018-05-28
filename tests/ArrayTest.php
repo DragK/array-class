@@ -92,4 +92,18 @@ final class ArrayTest extends TestCase
         // test pushing a array
         $this->assertEquals([1, 2, 3, 5, 4, 6, 7, [1, 2]], $arr->getArray());
     }
+
+    public function testPop()
+    {
+        $arr = new ArrayClass([1, 2, 3]);
+
+        // test returning last value from array
+        $this->assertEquals(3, $arr->pop());
+
+        // test removing last value from from array
+        $this->assertEquals([1, 2], $arr->getArray());
+
+        // test changing a length of array
+        $this->assertEquals(2, $arr->length);
+    }
 }

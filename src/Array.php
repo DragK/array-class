@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace DragK;
 
-use phpDocumentor\Reflection\Types\Mixed_;
 
-
-class ArrayClass extends \ArrayIterator
+class ArrayClass extends \ArrayIterator implements ArrayInterface
 {
+    /**
+     * @var int $length size of array
+     */
     public $length;
 
     public function __construct(array $data = []) 
@@ -17,9 +18,12 @@ class ArrayClass extends \ArrayIterator
         $this->setLength();
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getArray(): array
     {
-        return $this->getArrayCopy();
+        return (array)$this;
     }
 
     public function __toString(): string
@@ -33,8 +37,7 @@ class ArrayClass extends \ArrayIterator
     }
 
     /**
-     * @param array[] ...$array
-     * @return ArrayClass
+     * @inheritdoc
      */
     public function concat(array ...$array): ArrayClass
     {
@@ -42,27 +45,20 @@ class ArrayClass extends \ArrayIterator
     }
 
     /**
-     * 
-     * @param callable $func first parametr of $func is a $value, second is a key and both so optional but 
-     *                       I recommand using 'use' keyword 
-     *                       for additional parameters or if you don't want use data from array 
-     *                       but you have to pass some variable
-     * @return ArrayClass $newArray
+     * @inheritdoc
      */
     public function map(callable $func): ArrayClass
     {
-        $newArr = new ArrayClass();
-        foreach ($this->getArray() as $key => $value) {
-            $newArr->push($func($value, $key));
+        $newArr = [];
+        foreach ($this as $key => $value) {
+            $newArr[] = ($func($value, $key));
         }
 
-        return $newArr;
+        return new ArrayClass($newArr);
     }
 
     /**
-     * If you want modify a value from array or outside a function you have to add a reference(&)
-     * 
-     * @param callable $func  
+     * @inheritdoc
      */
     public function forEach(callable $func) 
     {
@@ -86,16 +82,17 @@ class ArrayClass extends \ArrayIterator
         return $this->length;
     }
 
-    public function pop(): Mixed_
+    public function pop()
     {
-        $value = array_pop($this->getArrayCopy());
+        $value = $this[$this->length - 1];
+        unset($this[$this->length - 1]);
         $this->setLength();
-        
+
         return $value;
     }
 
-    private function setLength() 
+    private function setLength()
     {
-        $this->length = sizeof($this->getArrayCopy());
+        $this->length = $this->count();
     }
 }

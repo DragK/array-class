@@ -70,7 +70,7 @@ interface ArrayInterface
 
     /**
      * @param callable $func
-     * @param int $initValue
+     * @param int $initValue Optional
      * @return int
      */
     public function reduce(callable $func, $initValue = 0);

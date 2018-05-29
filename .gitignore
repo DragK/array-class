@@ -3,3 +3,4 @@ composer.phar
 devindex.php
 .vscode/*
 composer.lock
+.idea/*

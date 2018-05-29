@@ -1,11 +1,14 @@
 {
     "name": "dragk/array-class",
     "description": "PHP version a array based on JavaScript",
+    "keywords": ["array", "chainable", "collections-like", "javascript"],
     "license": "MIT",
     "minimum-stability": "dev",
     "type": "library",
-    "version": "1.1.0",
-    "require": {},
+    "version": "1.1.1",
+    "require": {
+        "php": ">=7.0.0"
+    },
     "require-dev": {
         "phpunit/phpunit": "^5"
     },

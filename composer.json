@@ -1,11 +1,17 @@
 {
     "name": "dragk/array-class",
-    "description": "PHP version a array based on JavaScript",
-    "keywords": ["array", "chainable", "collections-like", "javascript"],
+    "description": "Lightweight php package to work with arrays like in JavaScript. Collections-like",
+    "keywords": [
+        "array",
+        "chainable",
+        "collections-like",
+        "javascript",
+        "prototype"
+    ],
     "license": "MIT",
-    "minimum-stability": "dev",
+    "minimum-stability": "alpha",
     "type": "library",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "require": {
         "php": ">=7.0.0"
     },

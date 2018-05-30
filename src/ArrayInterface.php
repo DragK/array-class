@@ -13,16 +13,95 @@ namespace DragK;
 interface ArrayInterface
 {
     /**
+     * Extends parent method of ArrayIterator class
+     * @param mixed $value
+     */
+    public function append($value);
+
+    /**
      * Faster way to return array than by getArrayCopy()
      */
-    public function getArray(): array;
+    public function toArray(): array;
 
-    public function __toString(): string;
-
+    /**
+     * Merge two or more arrays. This method does not change the existing arrays, but instead returns a new array.
+     * @param array[] ...$array
+     * @return ArrayClass
+     */
     public function concat(array ...$array): ArrayClass;
 
     /**
-     *
+     * Shallow copies part of an array to another location in the same array and returns it, without modifying its size.
+     * @param int $targetIndex
+     * @param int $startIndex
+     * @param null $endIndex
+     * @return ArrayClass
+     */
+    public function copyWithIn(int $targetIndex, int $startIndex = 0, $endIndex = null): ArrayClass;
+
+    /**
+     * Tests whether all elements in the array pass the test implemented by the provided function.
+     * @param callable $func
+     * @return bool
+     */
+    public function every(callable $func): bool;
+
+    /**
+     * Fills all the elements of an array from a start index to an end index with a static value.
+     * The end index is not included.
+     * @param mixed $value
+     * @param int $startIndex
+     * @param int $endIndex
+     * @return ArrayClass
+     */
+    public function fill($value, int $startIndex = null, int $endIndex = null): ArrayClass;
+
+    /**
+     * Creates a new array with all elements that pass the test implemented by the provided function.
+     * @param callable $func
+     * @return ArrayClass
+     */
+    public function filter(callable $func): ArrayClass;
+
+    /**
+     * Returns the value of the first element in the array that satisfies the provided testing function.
+     * Otherwise null is returned.
+     * @param callable $func
+     * @return mixed | null
+     */
+    public function find(callable $func);
+
+    /**
+     * Returns the index of the first element in the array that satisfies the provided testing function.
+     * Otherwise -1 is returned
+     * @param callable $func
+     * @return int | -1
+     */
+    public function findIndex(callable $func): int;
+
+    /**
+     * Executes a provided function once for each array element.
+     * If you want modify a value from array or outside a function you have to add a reference(&)     *
+     * @param callable $func
+     */
+    public function forEach(callable $func);
+
+    /**
+     * Determines whether an array includes a certain element, returning true or false as appropriate.
+     * @param $value
+     * @return bool
+     */
+    public function includes($value): bool;
+
+    /**
+     * Joins all elements of an array (or an array-like object) into a string and returns this string.
+     * @param $separator
+     * @return string
+     */
+    public function join(string $separator): string;
+
+    /**
+     * Creates a new array with the results of calling a provided function on every element in the calling array.
      * @param callable $func first parametr of $func is a $value, second is a key and both so optional but
      *                       I recommand using 'use' keyword
      *                       for additional parameters or if you don't want use data from array
@@ -32,46 +111,88 @@ interface ArrayInterface
     public function map(callable $func): ArrayClass;
 
     /**
-     * If you want modify a value from array or outside a function you have to add a reference(&)
-     *
-     * @param callable $func
-     */
-    public function forEach(callable $func);
-
-    /**
-     * extends parent method of ArrayIterator class
-     * @param mixed $value
+     * Remove last element of array and return it. Changing length of array
      * @return mixed
      */
-    public function append($value);
+    public function pop();
 
     /**
-     * Add elements to array and return new length of array
+     * Adds one or more elements to the end of an array and returns the new length of the array.
      * @param array ...$data
      * @return int $this->length
      */
     public function push(...$data): int;
 
     /**
-     * Remove last element of array and return it. Changing length of array
-     * @return mixed
-     */
-    public function pop();
-
-    public function filter(callable $func): ArrayClass;
-
-    /**
-     * @param mixed $value
-     * @param int $startIndex
-     * @param int $endIndex
-     * @return ArrayClass
-     */
-    public function fill($value, $startIndex = null, $endIndex = null): ArrayClass;
-
-    /**
+     * Applies a function against an accumulator and each element in the array (from left to right)
+     * to reduce it to a single value.
      * @param callable $func
      * @param int $initValue Optional
      * @return int
      */
-    public function reduce(callable $func, $initValue = 0);
+    public function reduce(callable $func, int $initValue = 0);
+
+    /**
+     * Reverses an array in place. The first array element becomes the last,
+     * and the last array element becomes the first.
+     * @return ArrayClass
+     */
+    public function reverse(): ArrayClass;
+
+    /**
+     * Removes the first element from an array and returns that removed element.
+     * This method changes the length of the array.
+     * @return mixed
+     */
+    public function shift();
+
+    /**
+     * Returns a shallow copy of a portion of an array into a new array object selected
+     * from begin to end (end not included). The original array will not be modified.
+     * @param int $startIndex
+     * @param int|null $endIndex
+     * @return ArrayClass
+     */
+    public function slice(int $startIndex, int $endIndex = null): ArrayClass;
+
+    /**
+     * Tests whether at least one element in the array passes the test implemented by the provided function.
+     * @param callable $func
+     * @return bool
+     */
+    public function some(callable $func): bool;
+
+    /**
+     * Returns new sorted array object
+     * @return ArrayClass
+     */
+    public function sort(): ArrayClass;
+
+    /**
+     * Returns new array with elements which was added or replaced
+     * @param int $startIndex
+     * @param int|null $deleteCount
+     * @param array ...$items
+     * @return ArrayClass
+     */
+    public function splice(int $startIndex, $deleteCount = null, ...$items): ArrayClass;
+
+    /**
+     * @example ['a', 'b' , 'c'] --> "a,b,c"
+     * @return string
+     */
+    public function __toString(): string;
+
+    /**
+     * Adds one or more elements to the beginning of an array and returns the new length of the array.
+     * @param array ...$items
+     * @return int
+     */
+    public function unshift(...$items): int;
+
+    /**
+     * Returns a new array Iterator object that contains the values for each index in the array.
+     * @return \ArrayIterator
+     */
+    public function values(): \ArrayIterator;
 }

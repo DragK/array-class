@@ -12,6 +12,14 @@ namespace DragK;
  */
 interface ArrayInterface
 {
+
+    /**
+     * Determines whether the passed value is an Array.
+     * @param $valueToCheck
+     * @return bool
+     */
+    public static function isArray($valueToCheck): bool;
+
     /**
      * Extends parent method of ArrayIterator class
      * @param mixed $value
@@ -38,6 +46,12 @@ interface ArrayInterface
      * @return ArrayClass
      */
     public function copyWithIn(int $targetIndex, int $startIndex = 0, $endIndex = null): ArrayClass;
+
+    /**
+     * Returns a new Array Iterator object that contains the key/value pairs for each index in the array.
+     * @return \ArrayIterator
+     */
+    public function entries(): \ArrayIterator;
 
     /**
      * Tests whether all elements in the array pass the test implemented by the provided function.
@@ -75,7 +89,7 @@ interface ArrayInterface
      * Returns the index of the first element in the array that satisfies the provided testing function.
      * Otherwise -1 is returned
      * @param callable $func
-     * @return int | -1
+     * @return int index|-1
      */
     public function findIndex(callable $func): int;
 
@@ -94,11 +108,34 @@ interface ArrayInterface
     public function includes($value): bool;
 
     /**
+     * Returns the first index at which a given element can be found in the array, or -1 if it is not present.
+     * @param mixed $elementToSearch
+     * @param int $startIndex
+     * @return int index|-1
+     */
+    public function indexOf($elementToSearch, int $startIndex = 0): int;
+
+    /**
      * Joins all elements of an array (or an array-like object) into a string and returns this string.
      * @param $separator
      * @return string
      */
     public function join(string $separator): string;
+
+    /**
+     * Returns a new Array Iterator object that contains the keys for each index in the array.
+     * @return \ArrayIterator
+     */
+    public function keys(): \ArrayIterator;
+
+    /**
+     * Returns the last index at which a given element can be found in the array, or -1 if it is not present.
+     * The array is searched backwards, starting at startIndex.
+     * @param $elementToSearch
+     * @param int $startIndex
+     * @return int index|-1
+     */
+    public function lastIndexOf($elementToSearch, int $startIndex = -1): int;
 
     /**
      * Creates a new array with the results of calling a provided function on every element in the calling array.
@@ -133,6 +170,15 @@ interface ArrayInterface
     public function reduce(callable $func, int $initValue = 0);
 
     /**
+     * Method applies a function against an accumulator and each value of the array (from right-to-left)
+     * to reduce it to a single value.
+     * @param callable $func
+     * @param int|null $initialValue
+     * @return mixed
+     */
+    public function reduceRight(callable $func, int $initialValue = null);
+
+    /**
      * Reverses an array in place. The first array element becomes the last,
      * and the last array element becomes the first.
      * @return ArrayClass
@@ -153,7 +199,7 @@ interface ArrayInterface
      * @param int|null $endIndex
      * @return ArrayClass
      */
-    public function slice(int $startIndex, int $endIndex = null): ArrayClass;
+    public function slice(int $startIndex = 0, int $endIndex = null): ArrayClass;
 
     /**
      * Tests whether at least one element in the array passes the test implemented by the provided function.
@@ -184,15 +230,20 @@ interface ArrayInterface
     public function __toString(): string;
 
     /**
-     * Adds one or more elements to the beginning of an array and returns the new length of the array.
-     * @param array ...$items
-     * @return int
-     */
-    public function unshift(...$items): int;
-
-    /**
      * Returns a new array Iterator object that contains the values for each index in the array.
      * @return \ArrayIterator
      */
     public function values(): \ArrayIterator;
+
+    /**
+     * Adds one or more elements to the beginning of an array:
+     * if $immutable is true: return new array object. I recommend that way.
+     * if $immutable is false: returns the new length of the array. **MUCH more time expensive**.
+     *
+     * Not exactly implementation of JS Array
+     * @param bool $immutable
+     * @param array ...$items
+     * @return mixed
+     */
+    public function unshift(bool $immutable = true, ...$items);
 }

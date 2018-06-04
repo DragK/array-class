@@ -19,6 +19,19 @@ final class ArrayTest extends TestCase
         $this->assertEquals([], (new ArrayClass())->toArray());
     }
 
+    public function testIsArray()
+    {
+        $this->assertEquals(true, ArrayClass::isArray([1, 2]));
+
+        $this->assertEquals(false, ArrayClass::isArray("[]"));
+
+        $this->assertEquals(false, ArrayClass::isArray(1));
+
+        $this->assertEquals(false, ArrayClass::isArray(new ArrayClass([1])));
+
+        $this->assertEquals(true, ArrayClass::isArray((new ArrayClass([1]))->toArray()));
+    }
+
     public function testGetArrayReturnArray()
     {
         $this->assertEquals([], (new ArrayClass())->toArray());
@@ -58,6 +71,14 @@ final class ArrayTest extends TestCase
         $this->assertEquals([1, 2, 3, 3, 4], $result5->toArray());
     }
 
+    public function testEntries()
+    {
+        $arr1 = new ArrayClass([1, 2, 3, 4, 5]);
+
+        $result = $arr1->entries()->current();
+        $this->assertEquals([0, 1], $result);
+    }
+    
     public function testEvery()
     {
         $arr = new ArrayClass([1, 2, 3]);
@@ -182,6 +203,23 @@ final class ArrayTest extends TestCase
         $this->assertEquals(false, $result);
     }
 
+    public function testIndexOf()
+    {
+        $arr = new ArrayClass(['ant', 'bison', 'camel', 'duck', 'bison']);
+
+        // one parameter
+        $result = $arr->indexOf("bison");
+        $this->assertEquals(1, $result);
+
+        // two parameters
+        $result = $arr->indexOf("bison", 2);
+        $this->assertEquals(4, $result);
+
+        // not found
+        $result = $arr->indexOf("antman");
+        $this->assertEquals(-1, $result);
+    }
+
     public function testJoin()
     {
         $arr = new ArrayClass([1, 2, 3, 4, 5]);
@@ -193,6 +231,33 @@ final class ArrayTest extends TestCase
         // test with number
         $result = $arr->join(0);
         $this->assertEquals("102030405", $result);
+    }
+
+    public function testKeys()
+    {
+        $arr = new ArrayClass([1, 2, 3, 4, 5]);
+        $result = $arr->keys();
+        $this->assertEquals(0, $result->current());
+        $result->next();
+        $this->assertEquals(1, $result->current());
+
+    }
+
+    public function testLastIndexOf()
+    {
+        $arr = new ArrayClass(['ant', 'bison', 'camel', 'duck', 'bison']);
+
+        // one parameter
+        $result = $arr->lastIndexOf("bison");
+        $this->assertEquals(4, $result);
+
+        // two parameters
+        $result = $arr->lastIndexOf("bison", 2);
+        $this->assertEquals(1, $result);
+
+        // not found
+        $result = $arr->lastIndexOf("antman");
+        $this->assertEquals(-1, $result);
     }
 
     public function testMap()
@@ -276,6 +341,38 @@ final class ArrayTest extends TestCase
         $this->assertEquals(120, $result);
     }
 
+    public function testReduceRight()
+    {
+        $arr = new ArrayClass([[0, 1], [2, 3], [4, 5]]);
+        $result = $arr->reduceRight(function ($previousValue, $currentValue) {
+            $previousValue = new ArrayClass($previousValue);
+            return $previousValue->concat($currentValue)->toArray();
+        });
+
+        $this->assertEquals([4, 5, 2, 3, 0, 1], $result);
+
+        //
+        $arr = new ArrayClass([0, 1, 2, 3, 4, 5]);
+
+        $result = $arr->reduceRight(function ($previousValue, $currentValue) {
+            return $previousValue + $currentValue;
+        });
+        $this->assertEquals(15, $result);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testExceptionReduceRight()
+    {
+        $arr = new ArrayClass();
+        $arr->reduceRight(function ($previousValue, $currentValue) {
+            $previousValue = new ArrayClass($previousValue);
+            return $previousValue->concat($currentValue);
+        });
+    }
+
+
     public function testReverse()
     {
         $arr = new ArrayClass([1, 2, 3, 4, 5]);
@@ -313,7 +410,11 @@ final class ArrayTest extends TestCase
 
         // negative parameter
         $result = $arr->slice(-1, 4);
-        $this->assertEquals([1, 2, 3, 4], $result->toArray());
+        $this->assertEquals([5], $result->toArray());
+
+        // negative parameter, less than length
+        $result = $arr->slice(-1, 0);
+        $this->assertEquals([], $result->toArray());
     }
 
     public function testSome()
@@ -381,10 +482,22 @@ final class ArrayTest extends TestCase
         $this->assertEquals('1,2', (new ArrayClass([1, 2]))->__toString());
     }
 
-    public function testUnshift()
+    public function testUnshiftImmutable()
     {
         $arr = new ArrayClass([1, 4, 2, 5, 3]);
-        $result = $arr->unshift(100, 234, 343);
+        $result = $arr->unshift(true, 100, 234, 343);
+
+        // test adding items to array
+        $this->assertEquals([100, 234, 343, 1, 4, 2, 5, 3], $result->toArray());
+
+        // test returning length of array
+        $this->assertEquals(8, $result->length);
+    }
+
+    public function testUnshiftMutable()
+    {
+        $arr = new ArrayClass([1, 4, 2, 5, 3]);
+        $result = $arr->unshift(false, 100, 234, 343);
 
         // test adding items to array
         $this->assertEquals([100, 234, 343, 1, 4, 2, 5, 3], $arr->toArray());

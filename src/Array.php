@@ -18,6 +18,11 @@ class ArrayClass extends \ArrayIterator implements ArrayInterface
         $this->setLength();
     }
 
+    public static function isArray($valueToCheck): bool
+    {
+        return is_array($valueToCheck);
+    }
+
     public function append($value)
     {
         parent::append($value);
@@ -76,6 +81,17 @@ class ArrayClass extends \ArrayIterator implements ArrayInterface
         }
 
         return $this;
+    }
+
+    public function entries(): \ArrayIterator
+    {
+        $array = [];
+
+        foreach ($this as $key => $value) {
+            $array[] = [$key, $value];
+        }
+
+        return new \ArrayIterator($array);
     }
 
     public function every(callable $func): bool
@@ -165,9 +181,37 @@ class ArrayClass extends \ArrayIterator implements ArrayInterface
         return isset($this[$value]) ? true : false;
     }
 
+    public function indexOf($elementToSearch, int $startIndex = 0): int
+    {
+        for ($i = $startIndex; $i < $this->length; $i++) {
+            if ($this[$i] === $elementToSearch) {
+                return $i;
+            }
+        }
+
+        return -1;
+    }
+
     public function join(string $separator = ","): string
     {
         return implode($separator, $this->toArray());
+    }
+
+    public function keys(): \ArrayIterator
+    {
+        return new \ArrayIterator(array_keys($this->toArray()));
+    }
+
+    public function lastIndexOf($elementToSearch, int $startIndex = -1): int
+    {
+        $startIndex = ($startIndex === -1) || ($startIndex > $this->length) ? $this->length - 1 : $startIndex;
+        for ($i = $startIndex; $i > 0; $i--) {
+            if ($this[$i] === $elementToSearch) {
+                return $i;
+            }
+        }
+
+        return -1;
     }
 
     public function map(callable $func): ArrayClass
@@ -184,8 +228,10 @@ class ArrayClass extends \ArrayIterator implements ArrayInterface
     public function push(...$data): int
     {
         foreach ($data as $value) {
-            $this->append($value);
+            parent::append($value);
         }
+
+        $this->setLength();
 
         return $this->length;
     }
@@ -210,6 +256,26 @@ class ArrayClass extends \ArrayIterator implements ArrayInterface
         return $result;
     }
 
+    public function reduceRight(callable $func, int $initialValue = null)
+    {
+        if ($initialValue === null && $this->length <= 0) {
+            throw new \InvalidArgumentException("Array is empty and your initial value isn't a set up");
+        }
+        $previousValue = $initialValue ?? $this[$this->length - 1];
+
+        $array = $this->reverse();
+        for ($i = $this->length - 1; $i > 0; $i--) {
+            $array->next();
+            $previousValue = $func($previousValue, $array->current());
+
+            if (!$array->valid()) {
+                break;
+            }
+        }
+
+        return $previousValue;
+    }
+
     public function reverse(): ArrayClass
     {
         return new ArrayClass(array_reverse($this->toArray()));
@@ -225,14 +291,12 @@ class ArrayClass extends \ArrayIterator implements ArrayInterface
         return $firstElement;
     }
 
-    public function slice(int $startIndex, int $endIndex = null): ArrayClass
+    public function slice(int $startIndex = 0, int $endIndex = null): ArrayClass
     {
-        $endIndex = $endIndex ?? $this->length;
+        $endIndex = is_null($endIndex) ? $this->length : $endIndex - abs($startIndex);
 
         return new ArrayClass(
-            $this->filter(function ($value, $key) use ($startIndex, $endIndex) {
-                return $key >= $startIndex && $key < $endIndex;
-            })->toArray()
+            array_slice($this->toArray(), $startIndex, $endIndex)
         );
     }
 
@@ -271,14 +335,18 @@ class ArrayClass extends \ArrayIterator implements ArrayInterface
         return $this->join();
     }
 
-    public function unshift(...$items): int
+    public function unshift(bool $immutable = true, ...$items)
     {
-        $array = $this->getArrayCopy();
+        $array = $this->toArray();
+        if ($immutable) {
+            array_unshift($array, ...$items);
+            return new ArrayClass($array);
+        }
+
         $length = array_unshift($array, ...$items);
         $this->clearArray();
         $this->push(...$array);
         $this->setLength();
-
         $this->resetOffset();
 
         return $length;
@@ -287,7 +355,7 @@ class ArrayClass extends \ArrayIterator implements ArrayInterface
     private function clearArray()
     {
         foreach ($this->toArray() as $key => $value) {
-            $this->offsetUnset($key);
+            unset($this[$key]);
         }
 
         unset($value);
@@ -306,7 +374,7 @@ class ArrayClass extends \ArrayIterator implements ArrayInterface
     {
         for ($newKey = 0; $newKey < $this->length; $newKey++) {
             $this[$newKey] = $this[$this->key()];
-            $this->offsetUnset($this->key());
+            unset($this[$this->key()]);
         }
     }
 

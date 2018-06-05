@@ -224,7 +224,7 @@ interface ArrayInterface
     public function splice(int $startIndex, $deleteCount = null, ...$items): ArrayClass;
 
     /**
-     * @example ['a', 'b' , 'c'] --> "a,b,c"
+     * @example ['a', 'b', 'c'] --> "a,b,c"
      * @return string
      */
     public function __toString(): string;

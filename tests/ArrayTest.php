@@ -372,7 +372,6 @@ final class ArrayTest extends TestCase
         });
     }
 
-
     public function testReverse()
     {
         $arr = new ArrayClass([1, 2, 3, 4, 5]);

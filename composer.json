@@ -1,6 +1,6 @@
 {
     "name": "dragk/array-class",
-    "description": "Lightweight php package to work with arrays like in JavaScript. Collections-like",
+    "description": "Lightweight php package to work with arrays like in JavaScript or C#. Immutable-first. Collections-like",
     "keywords": [
         "array",
         "chainable",
@@ -11,7 +11,7 @@
     "license": "MIT",
     "minimum-stability": "alpha",
     "type": "library",
-    "version": "1.3.0",
+    "version": "1.3.1",
     "require": {
         "php": ">=7.0.0"
     },

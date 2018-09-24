@@ -10,13 +10,19 @@ final class ArrayTest extends TestCase
     public function testCanCreateArrayWithParameter()
     {
         // test array as parameter
-        $arr = new ArrayClass([1,2,3]);
+        $arr = new ArrayClass([1, 2, 3]);
         $this->assertEquals([1, 2, 3], $arr->toArray());
     }
 
     public function testCanCreateEmptyArray()
     {
         $this->assertEquals([], (new ArrayClass())->toArray());
+    }
+
+    public function testItCanBeAccesedLikeArray()
+    {
+        $arr = new ArrayClass([1, 3, 2]);
+        $this->assertEquals($arr[1], 3);
     }
 
     public function testIsArray()
@@ -78,7 +84,7 @@ final class ArrayTest extends TestCase
         $result = $arr1->entries()->current();
         $this->assertEquals([0, 1], $result);
     }
-    
+
     public function testEvery()
     {
         $arr = new ArrayClass([1, 2, 3]);
@@ -148,7 +154,7 @@ final class ArrayTest extends TestCase
             return strlen($value) >= 6 && $key < 'e';
         });
 
-        $this->assertEquals(['d' => "exuberant",], $result->toArray());
+        $this->assertEquals(['d' => "exuberant", ], $result->toArray());
     }
 
     public function testFind()

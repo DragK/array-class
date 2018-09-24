@@ -1,8 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-
 namespace DragK;
 
 
@@ -55,7 +52,7 @@ interface ArrayInterface
 
     /**
      * Tests whether all elements in the array pass the test implemented by the provided function.
-     * @param callable $func
+     * @param callable $func taking two arguments: $currentValue, $currentKey(optional)
      * @return bool
      */
     public function every(callable $func): bool;
@@ -72,7 +69,7 @@ interface ArrayInterface
 
     /**
      * Creates a new array with all elements that pass the test implemented by the provided function.
-     * @param callable $func
+     * @param callable $func taking two arguments: $currentValue, $currentKey(optional)
      * @return ArrayClass
      */
     public function filter(callable $func): ArrayClass;
@@ -80,7 +77,7 @@ interface ArrayInterface
     /**
      * Returns the value of the first element in the array that satisfies the provided testing function.
      * Otherwise null is returned.
-     * @param callable $func
+     * @param callable $func taking two arguments: $currentValue, $currentKey(optional)
      * @return mixed | null
      */
     public function find(callable $func);
@@ -88,7 +85,7 @@ interface ArrayInterface
     /**
      * Returns the index of the first element in the array that satisfies the provided testing function.
      * Otherwise -1 is returned
-     * @param callable $func
+     * @param callable $func taking two arguments: $currentValue, $currentKey(optional)
      * @return int index|-1
      */
     public function findIndex(callable $func): int;
@@ -96,7 +93,7 @@ interface ArrayInterface
     /**
      * Executes a provided function once for each array element.
      * If you want modify a value from array or outside a function you have to add a reference(&)     *
-     * @param callable $func
+     * @param callable $func taking two arguments: $currentValue, $currentKey(optional)
      */
     public function forEach(callable $func);
 
@@ -139,10 +136,7 @@ interface ArrayInterface
 
     /**
      * Creates a new array with the results of calling a provided function on every element in the calling array.
-     * @param callable $func first parametr of $func is a $value, second is a key and both so optional but
-     *                       I recommand using 'use' keyword
-     *                       for additional parameters or if you don't want use data from array
-     *                       but you have to pass some variable
+     * @param callable $func taking two arguments: $currentValue, $currentKey(optional)
      * @return ArrayClass $newArray
      */
     public function map(callable $func): ArrayClass;
@@ -163,7 +157,7 @@ interface ArrayInterface
     /**
      * Applies a function against an accumulator and each element in the array (from left to right)
      * to reduce it to a single value.
-     * @param callable $func
+     * @param callable $func taking two arguments: accumulator, currentValue
      * @param int $initValue Optional
      * @return int
      */
@@ -172,7 +166,7 @@ interface ArrayInterface
     /**
      * Method applies a function against an accumulator and each value of the array (from right-to-left)
      * to reduce it to a single value.
-     * @param callable $func
+     * @param callable $func taking three arguments: $previousValue, $currentValue, $currentKey(optional)
      * @param int|null $initialValue
      * @return mixed
      */
@@ -203,7 +197,7 @@ interface ArrayInterface
 
     /**
      * Tests whether at least one element in the array passes the test implemented by the provided function.
-     * @param callable $func
+     * @param callable $func taking two arguments: $currentValue, $currentKey(optional)
      * @return bool
      */
     public function some(callable $func): bool;

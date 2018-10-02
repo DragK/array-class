@@ -9,7 +9,6 @@
         "prototype"
     ],
     "license": "MIT",
-    "minimum-stability": "beta",
     "type": "library",
     "version": "1.3.1",
     "require": {

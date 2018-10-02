@@ -38,6 +38,16 @@ final class ArrayTest extends TestCase
         $this->assertEquals(true, ArrayClass::isArray((new ArrayClass([1]))->toArray()));
     }
 
+    public function testCanCallFunction() 
+    {
+        $arr = new ArrayClass();
+        $arr[] = function() {
+            return 'It works';
+        };
+        $result = $arr[0]();
+        $this->assertEquals('It works', $result);
+    }
+
     public function testGetArrayReturnArray()
     {
         $this->assertEquals([], (new ArrayClass())->toArray());
